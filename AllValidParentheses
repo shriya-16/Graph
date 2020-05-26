@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool isValid(string s){
+    int cnt = 0;
+    for(char x:s){
+        if(x == '(')    cnt++;
+        if(x == ')')    cnt--;
+        if(cnt < 0) return 0;
+    }
+    return cnt == 0;
+}
+
+vector<string> makeValid(string s){
+    vector<string> res;
+    map<string, bool> vis;
+    queue<string> Q;
+    Q.push(s);
+    int found = 0;
+    while(!Q.empty()){
+        string temp = Q.front(); Q.pop();
+        if(vis[temp]) continue;
+        vis[temp] = 1;
+        if(isValid(temp))   found = 1, res.push_back(temp);
+        if(found)   continue;
+        for(int i = 0; i < temp.size(); i++){
+            if(temp[i] == '(' or temp[i] == ')'){
+                string v = temp.substr(0, i)+temp.substr(i+1, temp.size());
+                Q.push(v);
+            }
+        }
+    }
+    return res;
+}
+
+int main() {
+    string s = "(a)())()";
+    vector<string> res;
+    res = makeValid(s);
+    for(string s : res)
+        cout << s << endl;
+    return 0;
+}
